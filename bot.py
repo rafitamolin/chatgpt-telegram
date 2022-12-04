@@ -88,7 +88,7 @@ def reset(update: Update, context: CallbackContext) -> None:
     update.message.reply_text("Yep, I don't remember a thing.")
 
 
-def main() -> None:
+def start_bot() -> None:
     """Start the bot."""
     chatbot.reset_chat()  # Forgets conversation
     chatbot.refresh_session()  # Uses the session_token to get a new bearer token
@@ -117,4 +117,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    start_bot()
