@@ -9,6 +9,8 @@ Simple Bot to reply to Telegram messages.
 import logging
 import os
 
+from dotenv import load_dotenv
+
 from telegram import Update
 from telegram.ext import (
     Updater,
@@ -20,6 +22,7 @@ from telegram.ext import (
 
 from revChatGPT.revChatGPT import Chatbot
 
+load_dotenv()
 
 # Enable logging
 logging.basicConfig(
@@ -68,6 +71,7 @@ def reply(update: Update, context: CallbackContext) -> None:
         return
 
     try:
+        update.message.reply_text(update.message.text)
         response = chatbot.get_chat_response(update.message.text)
         update.message.reply_text(response["message"])
     except Exception as e:
@@ -82,7 +86,6 @@ def reset(update: Update, context: CallbackContext) -> None:
     if not is_allowed(update):
         return
 
-    update.effective_user.username
     chatbot.reset_chat()  # Forgets conversation
     chatbot.refresh_session()  # Uses the session_token to get a new bearer token
     update.message.reply_text("Yep, I don't remember a thing.")

@@ -1,7 +1,3 @@
 python-telegram-bot==13.14
 revChatGPT==0.0.14
-
-# fastapi web server for deployment
-fastapi>=0.68.0,<0.69.0
-pydantic>=1.8.0,<2.0.0
-uvicorn>=0.15.0,<0.16.0
+python-dotenv==0.21.0
