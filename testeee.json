@@ -1,0 +1,175 @@
+{
+  "name": "test c4",
+  "nodes": [
+    {
+      "parameters": {
+        "functionCode": "const staticData = this.getWorkflowStaticData('global');\n\nlatestRead = staticData.latestRead;\n\nfor (let item of items) {\n  item.json.latestRead = latestRead || '1970-01-01';\n}\n\nreturn items;"
+      },
+      "name": "Latest Read",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        560,
+        660
+      ],
+      "id": "ce07dec4-5bf4-4df7-bae7-da1491c3813e"
+    },
+    {
+      "parameters": {
+        "functionCode": "const staticData = this.getWorkflowStaticData('global');\n\nif (items.length > 0) {\n  staticData.latestRead = items[0].json.isoDate || staticData.latestRead;\n}\n\n\nreturn items;"
+      },
+      "name": "Write Latest Read",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        920,
+        560
+      ],
+      "id": "13858fa3-d37d-4e2f-b250-e2cfaa116c0c"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{new Date($node[\"Latest Read\"].data[\"latestRead\"]).getTime()}}",
+              "value2": "={{new Date($node[\"Code\"].data[\"isoDate\"]).getTime()}}"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        720,
+        660
+      ],
+      "id": "7a3e92a9-9b44-4636-ac37-bcc06673f703"
+    },
+    {
+      "parameters": {
+        "chatId": "10033535",
+        "text": "=test",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {}
+          ]
+        },
+        "additionalFields": {
+          "parse_mode": "HTML"
+        }
+      },
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        920,
+        760
+      ],
+      "id": "9697e1a5-5540-4c42-b8d8-de0a3cb5291a",
+      "credentials": {
+        "telegramApi": {
+          "id": "7",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://www.rafitamolin.com/testttete.json",
+        "options": {}
+      },
+      "id": "02f4c931-d1e3-4635-a823-7969920e84d9",
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [
+        320,
+        660
+      ]
+    },
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "value": 20,
+              "unit": "minutes"
+            }
+          ]
+        }
+      },
+      "name": "Cron1",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        60,
+        660
+      ],
+      "id": "c9c3e23b-63c9-44f8-be32-6a4e146badcf"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Latest Read": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Write Latest Read",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Latest Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "4cc041a2-ebf8-43e8-8d32-dad78b37e288",
+  "id": "19",
+  "meta": {
+    "instanceId": "c16086cda776cefe8ff98ae96a27d51da1ff65dd7f781167803e26f1e26146e7"
+  },
+  "tags": []
+}
